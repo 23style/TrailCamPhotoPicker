@@ -1,0 +1,16 @@
+*.jpg
+*.JPG
+*.jpeg
+*.JPEG
+*.png
+*.PNG
+/delete/
+
+organizer/.venv/
+organizer/.thumb_cache/
+organizer/.last_folder.txt
+organizer/run.log
+organizer/run.err.log
+**/.organizer_state.json
+__pycache__/
+*.pyc

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>実行完了 - フィールドカメラ写真整理</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <h1>フィールドカメラ写真整理</h1>
+</header>
+
+<div class="result">
+  <h2>移動が完了しました</h2>
+  <p>残した写真: {{ kept_count }} 枚</p>
+  <p>delete フォルダへ移動した写真: {{ moved|length }} 枚</p>
+  {% if moved %}
+  <ul class="moved-list">
+    {% for name in moved %}
+    <li>{{ name }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <p><a href="{{ url_for('index', folder=folder) }}">フォルダに戻る</a></p>
+</div>
+</body>
+</html>

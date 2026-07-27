@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>フィールドカメラ写真整理</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <h1>フィールドカメラ写真整理</h1>
+  <form class="folder-form" method="get" action="{{ url_for('index') }}">
+    <input type="text" name="folder" value="{{ folder }}" placeholder="写真フォルダのパスを入力（例: C:\myWork\fieldCam\100HUNTI）" size="60">
+    <button type="submit">読み込む</button>
+  </form>
+</header>
+
+{% if error %}
+  <p class="error">{{ error }}</p>
+{% endif %}
+
+{% if groups %}
+<form id="execForm" method="post" action="{{ url_for('execute') }}">
+  <input type="hidden" name="folder" value="{{ folder }}">
+
+  <div class="statusbar">
+    <span id="statusText">全 {{ total }} 枚</span>
+    <label class="thumb-size-control">
+      サムネイルサイズ
+      <input type="range" id="thumbSizeSlider" min="80" max="320" step="10" value="150">
+    </label>
+    <button type="button" id="checkAll">すべて選択</button>
+    <button type="button" id="uncheckAll">すべて解除</button>
+    <button type="submit" id="execBtn" class="danger">実行（未チェックを delete フォルダへ移動）</button>
+  </div>
+
+  {% for group in groups %}
+  <section class="day-group" data-day="{{ group.label }}">
+    <div class="day-header">
+      <h2>{{ group.label }}</h2>
+      <span class="day-count">{{ group.count }}枚</span>
+    </div>
+    <div class="photo-grid">
+      {% for photo in group.photos %}
+      <label class="photo-card">
+        <img class="thumb" loading="lazy"
+             src="{{ url_for('thumb', folder=folder, file=photo.name) }}"
+             data-full="{{ url_for('photo', folder=folder, file=photo.name) }}"
+             alt="{{ photo.name }}">
+        <div class="photo-meta">
+          <input type="checkbox" class="keep-checkbox" name="keep" value="{{ photo.name }}" {% if photo.name in keep_set %}checked{% endif %}>
+          <span class="photo-name">{{ photo.name }}</span>
+          <span class="photo-time">{{ photo.time }}</span>
+        </div>
+      </label>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</form>
+{% endif %}
+
+<div id="lightbox" class="lightbox hidden">
+  <button type="button" id="lbClose" class="lb-close" aria-label="閉じる">&times;</button>
+  <button type="button" id="lbPrev" class="lb-nav lb-prev" aria-label="前の写真">&lt;</button>
+
+  <div id="lbTransition" class="lb-transition hidden">
+    <p id="lbTransitionLabel"></p>
+    <p class="lb-transition-hint">クリックして進む</p>
+  </div>
+
+  <div id="lbPhotoWrap" class="lb-photo-wrap">
+    <div class="lb-header">
+      <span id="lbDayLabel"></span>
+      <span id="lbCounter"></span>
+    </div>
+    <img id="lightboxImg" src="">
+    <div class="lb-toolbar">
+      <label class="lb-keep">
+        <input type="checkbox" id="lbKeepCheckbox"> 残す
+      </label>
+      <span id="lbFileName"></span>
+    </div>
+  </div>
+
+  <button type="button" id="lbNext" class="lb-nav lb-next" aria-label="次の写真">&gt;</button>
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

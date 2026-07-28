@@ -150,10 +150,12 @@ def index():
     total = 0
     error = None
     keep_set = set()
+    has_saved_state = False
     if folder:
         if os.path.isdir(folder):
             try:
                 groups, total = group_by_day(folder)
+                has_saved_state = os.path.isfile(state_file_path(folder))
                 keep_set = load_keep_state(folder)
                 if total == 0:
                     error = "このフォルダに画像ファイルが見つかりませんでした。"
@@ -163,7 +165,13 @@ def index():
         else:
             error = "指定されたフォルダが見つかりません。"
     return render_template(
-        "index.html", folder=folder, groups=groups, total=total, error=error, keep_set=keep_set
+        "index.html",
+        folder=folder,
+        groups=groups,
+        total=total,
+        error=error,
+        keep_set=keep_set,
+        has_saved_state=has_saved_state,
     )
 
 

@@ -47,7 +47,7 @@
              data-full="{{ url_for('photo', folder=folder, file=photo.name) }}"
              alt="{{ photo.name }}">
         <div class="photo-meta">
-          <input type="checkbox" class="keep-checkbox" name="keep" value="{{ photo.name }}" {% if photo.name in keep_set %}checked{% endif %}>
+          <input type="checkbox" class="keep-checkbox" name="keep" value="{{ photo.name }}" {% if photo.name in keep_set or (not has_saved_state and group.count == 1) %}checked{% endif %}>
           <span class="photo-name">{{ photo.name }}</span>
           <span class="photo-time">{{ photo.time }}</span>
         </div>
